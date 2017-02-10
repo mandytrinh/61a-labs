@@ -254,7 +254,8 @@ class Number(Value):
         return str(self.value)
 
 class LambdaFunction(Value):
-    """A lambda function. Lambda functions are created in the LambdaExpr.eval
+    """A lambda function that takes a list of arguments.
+    Lambda functions are created in the LambdaExpr.eval
     method. A lambda function is a lambda expression that knows the
     environment in which it was evaluated in.
 
@@ -290,8 +291,15 @@ class LambdaFunction(Value):
         if len(self.parameters) != len(arguments):
             raise TypeError("Cannot match parameters {} to arguments {}".format(
                 comma_separated(self.parameters), comma_separated(arguments)))
-        "*** YOUR CODE HERE ***"
+        "*** YOUR CODE BELOW ***"
+        new_env = self.parent.copy()
+        tuples = zip(self.parameters, arguments) #Returns an iterator of tuples, e.g: zip('ABCD', 'xy') --> Ax By
+        for each_parameter, each_argument in tuples:
+            new_env[each_parameter] = each_argument
+        return self.body.eval(new_env)
 
+        
+        
     def __str__(self):
         definition = LambdaExpr(self.parameters, self.body)
         return '<function {}>'.format(definition)
